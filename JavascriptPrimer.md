@@ -86,3 +86,73 @@ object2.func();
 // global param
 // global param
 ```
+
+[オブジェクト](https://jsprimer.net/basic/object/)
+
+```javascript
+// `version`のプロパティ名が被っている
+const objectA = { version: "a" };
+const objectB = { version: "b" };
+const merged = { 
+    ...objectA,
+    ...objectB,
+    other: "other"
+};
+// 後ろにある`objectB`のプロパティで上書きされる
+console.log(merged); // => { version: "b", other: "other" }
+```
+
+```javascript
+// 引数の`obj`を浅く複製したオブジェクトを返す
+const shallowClone = (obj) => {
+    return Object.assign({}, obj);
+};
+// 引数の`obj`を深く複製したオブジェクトを返す
+function deepClone(obj) {
+    const newObj = shallowClone(obj);
+    // プロパティがオブジェクト型であるなら、再帰的に複製する
+    Object.keys(newObj)
+        .filter(k => typeof newObj[k] === "object")
+        .forEach(k => newObj[k] = deepClone(newObj[k]));
+    return newObj;
+}
+const obj = { 
+    level: 1,
+    nest: {
+        level: 2
+    }
+};
+const cloneObj = deepClone(obj);
+// `nest`オブジェクトも再帰的に複製されている
+console.log(cloneObj.nest === obj.nest); // => false
+```
+
+[プロトタイプオブジェクト](https://jsprimer.net/basic/prototype-object/)
+
+```javascript
+// 親がnull、つまり親がいないオブジェクトを作る
+const obj = Object.create(null);
+// Object.prototypeを継承しないため、hasOwnPropertyが存在しない
+console.log(obj.hasOwnProperty); // => undefined
+```
+
+
+```javascript
+const map = new Map();
+// toStringキーは存在しない
+console.log(map.has("toString")); // => false
+```
+
+[文字列](https://jsprimer.net/basic/string/)
+
+```javascript
+// 呼び出し方によって受け取る引数の形式が変わる
+function tag(strings, ...values) {
+    // stringsは文字列のパーツが${}で区切られた配列となる
+    console.log(strings); // => ["template "," literal ",""]
+    // valuesには${}の評価値が順番に入る
+    console.log(values); // => [0, 1]
+}
+// ()をつけずにテンプレートを呼び出す
+tag`template ${0} literal ${1}`;
+```
